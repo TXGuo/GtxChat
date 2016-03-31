@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="chatModule">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="css/bootstrap.css"/>
+    <style>
+        .user {
+            color: green;
+            cursor: pointer;
+        }
+
+        .panel-body {
+            height: 500px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="container" ng-controller="chatController">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel panel-heading">欢迎来到聊天室</div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <li ng-repeat="user in users" class="list-group-item">
+                            <span ng-click="getUserName(user.user)" class="user" ng-bind="user.user"></span>
+                            ：
+                            <span ng-bind="user.message"></span>
+                        </li>
+                    </ul>
+                    <a id="bottom"></a>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <input type="text" class="form-control" ng-keyup="enterKeyPress($event)"
+                                   ng-model="inputMessage">
+                        </div>
+                        <div class="col-xs-2">
+                            <button class="btn btn-default" type="button" ng-click="sendMessage()">发言</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="js/jquery.js"></script>
+<script src="js/angular.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var app = angular.module('chatModule', []);
+
+    app.factory('socket', function ($rootScope) {
+        var socket = io.connect('/');
+        return {
+            on: function (eventName, callback) {
+                socket.on(eventName, function () {
+                    var args = arguments;
+                    $rootScope.$apply(function () {
+                        callback.apply(socket, args);
+                    });
+                });
+            },
+            emit: function (eventName, data, callback) {
+                socket.emit(eventName, data, function () {
+                    var args = arguments;
+                    $rootScope.$apply(function () {
+                        if (callback) {
+                            callback.apply(socket, args);
+                        }
+                    });
+                })
+            }
+        };
+    });
+
+    app.controller('chatController', function ($scope, socket, $location, $anchorScroll) {
+        $scope.users = [];
+
+        //监听服务器推送过来的消息
+        socket.on('message', function (message) {
+            $scope.users.push(message);
+        })
+
+        //回车发送
+        $scope.enterKeyPress = function (e) {
+            var keyCode = window.event ? e.keyCode : e.which;
+            if (keyCode == 13) {
+                $scope.sendMessage();
+            }
+        };
+
+        //点击获取私聊对象名
+        $scope.getUserName = function (userName) {
+            $scope.inputMessage = '@' + userName + ' ';
+        }
+
+        //发送消息
+        $scope.sendMessage = function () {
+            if ($scope.inputMessage && $scope.inputMessage.length > 0) {
+                socket.emit('send', $scope.inputMessage);
+                $scope.inputMessage = "";
+
+                //自动滚动到消息列表底部
+                $location.hash('bottom');
+                $anchorScroll();
+            }
+        }
+    })
+</script>
+</html>
