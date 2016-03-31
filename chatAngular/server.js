@@ -22,7 +22,6 @@ io.on('connection', function (socket) {
             var toUser = result[1];
             var content = result[2];
             if (clients[toUser]) {//通过用户名把对应的socket取出来
-                console.log('----' + toUser);
                 clients[toUser].emit('message', {user: username, message: '[私聊]' + content});
             } else {
                 socket.emit('message', {user: '系统', message: '你想私聊的人不在线'});
