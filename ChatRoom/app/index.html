@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="chatModule">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="./lib/bootstrap/dist/css/bootstrap.css"/>
+</head>
+<body ng-controller="chatController">
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#/">快乐聊天室</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#/room">聊天室 <span class="sr-only">(current)</span></a></li>
+                <li><a href="#"></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div ng-view></div>
+
+</body>
+<script src="/lib/jquery/dist/jquery.js"></script>
+<script src="/lib/bootstrap/dist/js/bootstrap.js"></script>
+<script src="/lib/angular/angular.js"></script>
+<script src="/lib/angular-route/angular-route.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/controller/chatModule.js"></script>
+<script src="/controller/socketServer.js"></script>
+<script src="/controller/chatController.js"></script>
+</html>
