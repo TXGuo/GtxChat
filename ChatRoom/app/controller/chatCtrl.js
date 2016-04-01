@@ -1,6 +1,4 @@
-angular.module('chatModule').controller('chatController', function ($scope, socketServer) {
-    alert('chatController');
-    console.log('chatController');
+angular.module('chatModule').controller('chatCtrl', function ($rootScope, $scope, socketServer, $location, $anchorScroll) {
     $scope.messages = [];
     $scope.newMessage = '';
 
@@ -17,13 +15,22 @@ angular.module('chatModule').controller('chatController', function ($scope, sock
     //发言
     $scope.sendMessage = function (e) {
         if ($scope.newMessage) {
-            socketServer.emit('message.add', $scope.newMessage);
+            socketServer.emit('message.add', {
+                username: $rootScope.user.username,
+                message: $scope.newMessage,
+                creatTime: new Date()
+            });
             $scope.newMessage = ''
+
+            //自动滚动到消息列表底部
+            $location.hash('bottom');
+            $anchorScroll();
         }
     }
 
     //接收新消息
     socketServer.on('message.new', function (data) {
+        console.log(data);
         $scope.messages.push(data);
     });
 

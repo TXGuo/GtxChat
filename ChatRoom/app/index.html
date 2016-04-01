@@ -5,8 +5,8 @@
     <title></title>
     <link rel="stylesheet" href="./lib/bootstrap/dist/css/bootstrap.css"/>
 </head>
-<body ng-controller="chatController">
-<nav class="navbar navbar-inverse">
+<body>
+<nav class="navbar navbar-inverse" ng-controller="navCtrl">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -21,14 +21,31 @@
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#/room">聊天室 <span class="sr-only">(current)</span></a></li>
-                <li><a href="#"></a></li>
+                <li ng-class="{active:isActive('/reg')}" ng-hide="user"><a href="#/reg">注册<span class="sr-only">(current)</span></a>
+                </li>
+                <li ng-class="{active:isActive('/login')}" ng-hide="user"><a href="#/login">登录<span class="sr-only">(current)</span></a>
+                </li>
+                <li ng-class="{active:isActive('/room')}" ng-show="user" class="active"><a href="#/room">聊天室<span
+                        class="sr-only">(current)</span></a></li>
+                <li ng-class="{active:isActive('/about')}"><a href="#/about">关于<span
+                        class="sr-only">(current)</span></a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right" ng-show="user">
+                <li>
+                    <a href="#"><img class="avator" src="images/avatar.png">{{user.username}}</a>
+                </li>
+                <li>
+                    <a href="#" ng-click="logOut()">退出</a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<div ng-view></div>
+<div class="container">
+    <div ng-view></div>
+</div>
 
 </body>
 <script src="/lib/jquery/dist/jquery.js"></script>
@@ -36,7 +53,15 @@
 <script src="/lib/angular/angular.js"></script>
 <script src="/lib/angular-route/angular-route.js"></script>
 <script src="/socket.io/socket.io.js"></script>
+<script src="/lib/moment/moment.js"></script>
+<script src="/lib/moment/locale/zh-cn.js"></script>
+<script src="/lib/angular-moment/angular-moment.js"></script>
+
 <script src="/controller/chatModule.js"></script>
+<script src="/controller/validateServer.js"></script>
 <script src="/controller/socketServer.js"></script>
-<script src="/controller/chatController.js"></script>
+<script src="/controller/chatCtrl.js"></script>
+<script src="/controller/regCtrl.js"></script>
+<script src="/controller/loginCtrl.js"></script>
+<script src="/controller/navCtrl.js"></script>
 </html>
