@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var aa = '123';
+var test = '123';
 app.use(express.static(__dirname));
 
 app.get('/', function (req, res) {
